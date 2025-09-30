@@ -14,7 +14,7 @@ public class Launcher {
 		HomeTurtle franklin = new HomeTurtle();
 		sandbox.add(franklin);
 
-        franklin.cog(50);
+        franklin.beehive(50);
 
 	}
 }
