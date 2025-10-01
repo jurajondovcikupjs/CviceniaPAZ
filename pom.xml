@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>Cvicenie01</module>
+        <module>Cvicenie02</module>
     </modules>
 
     <properties>
