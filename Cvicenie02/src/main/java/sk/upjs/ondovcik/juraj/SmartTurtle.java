@@ -2,6 +2,8 @@ package sk.upjs.ondovcik.juraj;
 
 import sk.upjs.jpaz2.*;
 
+import java.awt.*;
+
 
 public class SmartTurtle extends Turtle {
 
@@ -26,4 +28,21 @@ public class SmartTurtle extends Turtle {
 
         }
     }
+
+    public void dotCircle(int stepCount, double radius) {
+        double startX = this.getX();
+        double startY = this.getY();
+        for (int i = 0; i < stepCount; i++) {
+            this.turn(Math.random() * 360);
+            this.setPenColor(Color.RED);
+            this.step(5);
+
+            if (this.getX() > (radius / 2 + startX) || this.getX() < (startX - radius / 2) || this.getY() > (radius / 2 + startY) || this.getY() < (startY - radius / 2)) {
+                this.step(-5);
+            }
+        }
+        this.setPosition(startX, startY);
+    }
+
+
 }

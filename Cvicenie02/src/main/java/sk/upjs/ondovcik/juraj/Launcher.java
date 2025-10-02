@@ -6,12 +6,12 @@ public class Launcher {
 
 	public static void main(String[] args) {
 		// create new "sandbox" - a place where turtles can live
-		AnimatedWinPane sandbox = new AnimatedWinPane();
+		WinPane sandbox = new WinPane();
 
 		// create new turtle and add it to the "sandbox"
 		SmartTurtle franklin = new SmartTurtle();
 		sandbox.add(franklin);
 
-        franklin.mill(5, 50);
+        franklin.dotCircle(10000, 100);
 	}
 }
