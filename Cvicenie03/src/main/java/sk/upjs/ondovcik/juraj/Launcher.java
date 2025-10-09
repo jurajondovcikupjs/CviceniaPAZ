@@ -7,7 +7,7 @@ public class Launcher {
 	public static void main(String[] args) {
 
         SmartTurtle franklin = new SmartTurtle();
-        System.out.println(franklin.power(3, 1));
+        System.out.println(franklin.factorial(2));
 		
 	}
 }
