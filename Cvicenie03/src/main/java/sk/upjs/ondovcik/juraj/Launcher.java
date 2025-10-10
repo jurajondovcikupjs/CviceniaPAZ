@@ -2,12 +2,15 @@ package sk.upjs.ondovcik.juraj;
 
 import sk.upjs.jpaz2.*;
 
+import java.awt.*;
+
 public class Launcher {
 
 	public static void main(String[] args) {
 
-        SmartTurtle franklin = new SmartTurtle();
-        System.out.println(franklin.factorial(2));
-		
+        HomeTurtle franklin = new HomeTurtle();
+
+        System.out.println(franklin.combinedNumber(15, 30));
+
 	}
 }
