@@ -41,6 +41,7 @@ public class HomeTurtle extends Turtle {
             size = this.distanceTo(this.getX() + size / 2, this.getY() + size / 2);
 
         }
+        System.out.println("Koniec");
         this.setPosition(startX, startY);
         this.setDirection(startDirection);
     }
@@ -55,6 +56,9 @@ public class HomeTurtle extends Turtle {
     }
 
     public int goldbach(int n) {
+        if (n == 1) {
+            return -1;
+        }
         for (int q = 0; q * q < n ; q++) {
             if (isPrime(n - 2 * q * q)) {
                 return n - 2 * q * q;

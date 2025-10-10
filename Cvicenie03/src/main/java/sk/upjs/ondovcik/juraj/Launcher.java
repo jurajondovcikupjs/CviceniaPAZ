@@ -9,8 +9,10 @@ public class Launcher {
 	public static void main(String[] args) {
 
         HomeTurtle franklin = new HomeTurtle();
+        WinPane sandbox = new WinPane(500, 500);
+        sandbox.add(franklin);
 
-        System.out.println(franklin.combinedNumber(15, 30));
+        franklin.squares(300);
 
 	}
 }
