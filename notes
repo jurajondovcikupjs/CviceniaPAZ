@@ -1,0 +1,29 @@
+if (this.clickCount >= 1) {
+
+            if (x >= this.startX - 10 && x <= this.startX + 10 && y >= this.startY - 10 && y <= this.startY + 10 && this.clickCount > 2) {
+                turtle.setPosition(this.startX, this.startY);
+                turtle.dot(10);
+                turtle.setDirection(90);
+                turtle.printCenter("1");
+                clickCount = -1;
+
+            }
+
+            turtle.moveTo(lastX, lastY);
+            turtle.dot(10);
+            turtle.setDirection(90);
+            turtle.printCenter(Integer.toString(this.clickCount));
+            turtle.setPosition(x, y);
+
+
+        }
+
+        this.clickCount++;
+
+        if (this.clickCount > 0) {
+            turtle.dot(10);
+            turtle.setDirection(90);
+            turtle.printCenter(Integer.toString(this.clickCount));
+            this.lastX = x;
+            this.lastY = y;
+        }
