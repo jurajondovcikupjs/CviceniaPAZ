@@ -35,7 +35,7 @@ public class HomeTurtle extends Turtle {
                 acronyms = acronyms + znak;
             } else {
                 //ak nie tak skontrolujem ci je skratka dostatocne dlha a resetujem skratku
-                if (acronyms.length() >= 2) {
+                if (acronyms.length() > 2) {
                     pocet++;
                 }
                 acronyms = "";
