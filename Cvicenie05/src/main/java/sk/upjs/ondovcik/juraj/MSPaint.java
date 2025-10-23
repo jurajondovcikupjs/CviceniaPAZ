@@ -22,14 +22,14 @@ public class MSPaint extends WinPane {
         this.pen.setVisible(false);
         this.pen.setPosition(0, 0);
         drawColorSelector(50,50, Color.BLACK);
-        drawColorSelector(80,50, Color.RED);
-        drawColorSelector(110,50, Color.GREEN);
-        drawColorSelector(140,50, Color.BLUE);
+        drawColorSelector(100,50, Color.RED);
+        drawColorSelector(150,50, Color.GREEN);
+        drawColorSelector(200,50, Color.BLUE);
     }
 
     public void drawColorSelector(int x,int y, Color color) {
         this.pen.setPosition(x,y);
-        this.pen.setPenColor(color);
+        this.pen.setFillColor(color);
         this.pen.dot(20);
     }
 
@@ -38,17 +38,21 @@ public class MSPaint extends WinPane {
         super.onMouseClicked(x, y, detail);
 
         if (x >= 30 && x <= 70 && y >= 30 && y <= 70) {
-            this.pen.setPenColor(Color.BLACK);
+            this.pen.setFillColor(Color.BLACK);
             System.out.println("Black selected");
-        } else if (x >= 60 && x <= 100 && y >= 30 && y <= 70) {
-            this.pen.setPenColor(Color.RED);
+            drawColorSelector(50,50, Color.BLACK);
+        } else if (x >= 80 && x <= 120 && y >= 30 && y <= 70) {
+            this.pen.setFillColor(Color.RED);
             System.out.println("Red selected");
-        } else if (x >= 90 && x <= 130 && y >= 30 && y <= 70) {
-            this.pen.setPenColor(Color.GREEN);
+            drawColorSelector(100,50, Color.RED);
+        } else if (x >= 130 && x <= 170 && y >= 30 && y <= 70) {
+            this.pen.setFillColor(Color.GREEN);
             System.out.println("Green selected");
-        } else if (x >= 120 && x <= 160 && y >= 30 && y <= 70) {
-            this.pen.setPenColor(Color.BLUE);
+            drawColorSelector(150,50, Color.GREEN);
+        } else if (x >= 180 && x <= 220 && y >= 30 && y <= 70) {
+            this.pen.setFillColor(Color.BLUE);
             System.out.println("Blue selected");
+            drawColorSelector(200,50, Color.BLUE);
         }
     }
 
