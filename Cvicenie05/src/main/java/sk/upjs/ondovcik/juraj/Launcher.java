@@ -6,11 +6,13 @@ public class Launcher {
 
 	public static void main(String[] args) {
 
-        Korytnackovo korytnackovo = new Korytnackovo();
-        korytnackovo.nahodneFarby();
+        //Korytnackovo korytnackovo = new Korytnackovo();
+        //korytnackovo.nahodneFarby();
         //korytnackovo.posunITu(4, 100);
         //System.out.println(korytnackovo.sFarbouVon(4));
-        korytnackovo.krok();
+        //korytnackovo.krok();
+
+        MSPaint g = new MSPaint();
 		
 	}
 }
