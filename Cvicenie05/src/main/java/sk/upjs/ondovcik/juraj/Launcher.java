@@ -12,7 +12,9 @@ public class Launcher {
         //System.out.println(korytnackovo.sFarbouVon(4));
         //korytnackovo.krok();
 
-        MSPaint g = new MSPaint();
+        //MSPaint g = new MSPaint();
+
+        KorytnaciSvet ks = new KorytnaciSvet();
 		
 	}
 }

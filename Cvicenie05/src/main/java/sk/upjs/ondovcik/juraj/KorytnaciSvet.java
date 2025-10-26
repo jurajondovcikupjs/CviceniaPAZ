@@ -1,6 +1,7 @@
 package sk.upjs.ondovcik.juraj;
 
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 import sk.upjs.jpaz2.*;
 
@@ -38,4 +39,30 @@ public class KorytnaciSvet extends WinPane {
             this.pridajKorytnacku(x, y);
         }
     }
+
+    public void vystrelNaTazisko() {
+        double allX = 0;
+        double allY = 0;
+        for (int j = 0; j < this.korytnacky.length; j++) {
+            allX += this.korytnacky[j].getX();
+            allY += this.korytnacky[j].getY();
+        }
+        for (int i = 0; i < this.korytnacky.length; i++) {
+            double oldX = this.korytnacky[i].getX();
+            double oldY = this.korytnacky[i].getY();
+            this.korytnacky[i].moveTo(allX / (double) this.korytnacky.length, allY / (double) this.korytnacky.length);
+            this.korytnacky[i].setPosition(oldX, oldY);
+        }
+    }
+
+    public void testHistogram(double x, double y, double d) {
+        int[] p = this.histogram(x, y, d);
+        System.out.print("histogram(" + x + ", " + y + ", " + d + "): ");
+        System.out.println(Arrays.toString(p));
+    }
+
+    public int[] histogram(double x, double y, double d) {
+
+    }
+
 }
