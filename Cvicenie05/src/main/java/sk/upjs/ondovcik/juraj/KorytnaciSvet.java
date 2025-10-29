@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import sk.upjs.jpaz2.*;
 
-public class KorytnaciSvet extends WinPane {
+public class KorytnaciSvet extends AnimatedWinPane {
     /**
      * Referencia na pole korytnaciek
      */
@@ -41,12 +41,15 @@ public class KorytnaciSvet extends WinPane {
     }
 
     public void vystrelNaTazisko() {
+        //sucet vsetkych x a y
         double allX = 0;
         double allY = 0;
+        //prejdenie vsetkych korytnaciek a spocitanie ich x a y
         for (int j = 0; j < this.korytnacky.length; j++) {
             allX += this.korytnacky[j].getX();
             allY += this.korytnacky[j].getY();
         }
+        //nastavenie kazdej korytnacky na tazisko a vratit ju naspat
         for (int i = 0; i < this.korytnacky.length; i++) {
             double oldX = this.korytnacky[i].getX();
             double oldY = this.korytnacky[i].getY();
@@ -56,11 +59,25 @@ public class KorytnaciSvet extends WinPane {
     }
 
     public int[] histogram(double x, double y, double d) {
+        //najst najvzdialenejsiu korytnacku
+        double dist = 0;
+        int index = 0;
+        for (int i = 0; i < korytnacky.length; i++) {
+            if (this.korytnacky[i].distanceTo(x, y) > dist) {
+                dist = this.korytnacky[i].distanceTo(x, y);
+                index = i;
+            }
+        }
+        //System.out.println("Najvzdialenejsia korytnacka je na indexe: " + index);
+        int[] pole = new int[ (int) (this.korytnacky[index].distanceTo(x, y) / d) + 1];
+        //for (int i = 0; i < korytnacky.length; i++) {
+        //    System.out.println(korytnacky[i].distanceTo(x, y));
+        //}
 
-        int[] pole = new int[korytnacky.length];
-
+        //upravenie pola - histogramu
         for (int k = 0; k < korytnacky.length; k++) {
-            int zona = (int) (this.korytnacky[k].distanceTo(x, y) / d);
+            int zona = (int) ((this.korytnacky[k].distanceTo(x, y) / d));
+            pole[zona]++;
 
         }
 
@@ -74,21 +91,22 @@ public class KorytnaciSvet extends WinPane {
     }
 
     public void doStvorca(double dlzkaStrany) {
-
+        //vypocitat medzeru medzi korytnackami a plus pomocna korytnacka
         double medzera = dlzkaStrany / (this.korytnacky.length / 4.0 + 1);
         Turtle pomoc = new Turtle();
         pomoc.setVisible(true);
         this.add(pomoc);
-
-        //pomoc.penUp();
+        //na zaciatok
+        pomoc.penUp();
         pomoc.step(dlzkaStrany / 2.0);
         pomoc.turn(90);
-        //pomoc.step(- (dlzkaStrany / 2.0));
+        pomoc.step(- (dlzkaStrany / 2.0));
         pomoc.step(medzera);
+        //rozmiestnit korytnacky
         for (int i = 0; i < this.korytnacky.length; i++) {
             korytnacky[i].setPosition(pomoc.getX(), pomoc.getY());
             pomoc.step(medzera);
-            if (i % (this.korytnacky.length / 4) == 0) {
+            if (i % (this.korytnacky.length / 4) == (this.korytnacky.length / 4) - 1) {
                 pomoc.turn(90);
                 pomoc.step(medzera);
             }

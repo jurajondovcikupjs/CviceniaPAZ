@@ -14,7 +14,7 @@ public class Launcher {
 
         //MSPaint g = new MSPaint();
 
-        KorytnaciSvet ks = new KorytnaciSvet();
+        KorytnaciSvet2 ks = new KorytnaciSvet2();
         ObjectInspector oi = new ObjectInspector(ks);
         oi.inspect(ks);
 		
