@@ -75,7 +75,7 @@ public class KorytnaciSvet extends WinPane {
 
     public void doStvorca(double dlzkaStrany) {
 
-        double medzera = dlzkaStrany / (korytnacky.length / 4.0 + 1);
+        double medzera = dlzkaStrany / (this.korytnacky.length / 4.0 + 1);
         Turtle pomoc = new Turtle();
         pomoc.setVisible(true);
         this.add(pomoc);
@@ -83,15 +83,15 @@ public class KorytnaciSvet extends WinPane {
         //pomoc.penUp();
         pomoc.step(dlzkaStrany / 2.0);
         pomoc.turn(90);
-        pomoc.step(- dlzkaStrany / 2.0);
+        //pomoc.step(- (dlzkaStrany / 2.0));
         pomoc.step(medzera);
-        for (int i = 0; i < korytnacky.length; i++) {
-            for (int j = 0; j < this.korytnacky.length / 4; j++) {
-                korytnacky[i].setPosition(pomoc.getX(), pomoc.getY());
+        for (int i = 0; i < this.korytnacky.length; i++) {
+            korytnacky[i].setPosition(pomoc.getX(), pomoc.getY());
+            pomoc.step(medzera);
+            if (i % (this.korytnacky.length / 4) == 0) {
+                pomoc.turn(90);
                 pomoc.step(medzera);
             }
-            pomoc.turn(90);
-            pomoc.step(medzera);
         }
         this.remove(pomoc);
     }
