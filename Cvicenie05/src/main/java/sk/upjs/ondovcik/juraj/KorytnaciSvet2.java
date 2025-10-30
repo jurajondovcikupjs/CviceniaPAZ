@@ -1,5 +1,6 @@
 package sk.upjs.ondovcik.juraj;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
 import sk.upjs.jpaz2.*;
@@ -77,6 +78,28 @@ public class KorytnaciSvet2 extends WinPane {
         najkratsiCas += this.korytnacky[0].distanceTo(x, y);
 
         return najkratsiCas;
+    }
+
+    public int najblizsiaKorytnacka(double x, double y) {
+        double najmensiaVzdialenost = Double.MAX_VALUE;
+        int indexNajblizsej = -1;
+
+        for (int i = 0; i < this.korytnacky.length; i++) {
+            double vzdialenost = this.korytnacky[i].distanceTo(x, y);
+            if (vzdialenost < najmensiaVzdialenost) {
+                najmensiaVzdialenost = vzdialenost;
+                indexNajblizsej = i;
+            }
+        }
+        return indexNajblizsej;
+    }
+
+    public void prestrelka(int idxPrvehoStrelca, Color farbaStriel) {
+
+        Turtle zasiahnuti[] = new Turtle[this.korytnacky.length];
+
+        this.korytnacky[idxPrvehoStrelca].turnTowards(this.korytnacky[najblizsiaKorytnacka(this.ko)]);
+
     }
 
 }
