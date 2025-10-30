@@ -1,0 +1,48 @@
+public void prestrelka(int idxPrvehoStrelca, Color farbaStriel) {
+
+        boolean zasiahnuti[] = new boolean[this.korytnacky.length];
+        boolean hraBezi = true;
+
+
+        Turtle strelec = this.korytnacky[idxPrvehoStrelca];
+        int indexCiela = najblizsiaKorytnacka(strelec.getX(), strelec.getY(), idxPrvehoStrelca, zasiahnuti);
+        Turtle ciel = this.korytnacky[indexCiela];
+        zasiahnuti[najblizsiaKorytnacka(strelec.getX(), strelec.getY(), idxPrvehoStrelca, zasiahnuti)] = true;
+        System.out.println("Strelec: " + idxPrvehoStrelca + ", ciel: " + najblizsiaKorytnacka(strelec.getX(), strelec.getY(), idxPrvehoStrelca, zasiahnuti));
+
+        strela(strelec.getX(), strelec.getY(), ciel.getX(), ciel.getY(), farbaStriel);
+        strelec = ciel;
+        ciel = this.korytnacky[najblizsiaKorytnacka(strelec.getX(), strelec.getY(), idxPrvehoStrelca, zasiahnuti)];
+        zasiahnuti[indexCiela] = true;
+        System.out.println(Arrays.toString(zasiahnuti));
+
+
+
+
+    }
+
+    public void prestrelka(int idxPrvehoStrelca, Color farbaStriel) {
+
+            boolean[] zasiahnuti = new boolean[this.korytnacky.length];
+            int currentShooterIdx = idxPrvehoStrelca;
+
+            while (true) {
+                Turtle strelec = this.korytnacky[currentShooterIdx];
+
+                // find nearest unhit turtle (not self)
+                int idxCiela = najblizsiaKorytnacka(strelec.getX(), strelec.getY(), currentShooterIdx, zasiahnuti);
+                if (idxCiela == -1) break; // no more targets
+
+                Turtle ciel = this.korytnacky[idxCiela];
+
+                // shoot
+                strela(strelec.getX(), strelec.getY(), ciel.getX(), ciel.getY(), farbaStriel);
+
+                // mark as hit
+                zasiahnuti[idxCiela] = true;
+                ciel.setPenColor(farbaStriel);
+
+                // the hit turtle becomes the new shooter
+                currentShooterIdx = idxCiela;
+            }
+        }

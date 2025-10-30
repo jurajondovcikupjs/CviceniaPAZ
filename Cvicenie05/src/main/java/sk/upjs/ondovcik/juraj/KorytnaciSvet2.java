@@ -2,6 +2,7 @@ package sk.upjs.ondovcik.juraj;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 import sk.upjs.jpaz2.*;
 
@@ -40,66 +41,78 @@ public class KorytnaciSvet2 extends WinPane {
         }
     }
 
-    public double explozia(double x, double y, double sila) {
-        double najvacsiaVzdialenost = 0;
+    public void vystrelNaTazisko() {
+        //sucet vsetkych x a y
+        double allX = 0;
+        double allY = 0;
+        //prejdenie vsetkych korytnaciek a spocitanie ich x a y
+        for (int j = 0; j < this.korytnacky.length; j++) {
+            allX += this.korytnacky[j].getX();
+            allY += this.korytnacky[j].getY();
+        }
+        //nastavenie kazdej korytnacky na tazisko a vratit ju naspat
         for (int i = 0; i < this.korytnacky.length; i++) {
-            this.korytnacky[i].penUp();
-            this.korytnacky[i].setDirectionTowards(x, y);
-            this.korytnacky[i].turn(180);
-            double s = sila;
-            double d = Math.sqrt(Math.pow(this.korytnacky[i].getX() - x, 2) + Math.pow(this.korytnacky[i].getY() - y, 2));
-            double vzdialenost = Math.pow(sila, 2) / (Math.pow(d, 4));
-            this.korytnacky[i].step(vzdialenost);
-            if (vzdialenost > najvacsiaVzdialenost) {
-                najvacsiaVzdialenost = vzdialenost;
+            double oldX = this.korytnacky[i].getX();
+            double oldY = this.korytnacky[i].getY();
+            this.korytnacky[i].moveTo(allX / (double) this.korytnacky.length, allY / (double) this.korytnacky.length);
+            this.korytnacky[i].setPosition(oldX, oldY);
+        }
+    }
+
+    public int[] histogram(double x, double y, double d) {
+        //najst najvzdialenejsiu korytnacku
+        double dist = 0;
+        int index = 0;
+        for (int i = 0; i < korytnacky.length; i++) {
+            if (this.korytnacky[i].distanceTo(x, y) > dist) {
+                dist = this.korytnacky[i].distanceTo(x, y);
+                index = i;
             }
         }
-        return najvacsiaVzdialenost;
-    }
+        //System.out.println("Najvzdialenejsia korytnacka je na indexe: " + index);
+        int[] pole = new int[ (int) (this.korytnacky[index].distanceTo(x, y) / d) + 1];
+        //for (int i = 0; i < korytnacky.length; i++) {
+        //    System.out.println(korytnacky[i].distanceTo(x, y));
+        //}
 
-    public double casDoPrichodu(double x, double y) {
-        double najkratsiCas = 0.0;
+        //upravenie pola - histogramu
+        for (int k = 0; k < korytnacky.length; k++) {
+            int zona = (int) ((this.korytnacky[k].distanceTo(x, y) / d));
+            pole[zona]++;
 
-        //korytnacka sa otoci uhlom mensim k smeru x,y
-        //System.out.println(this.korytnacky[0].getDirection() + this.korytnacky[0].directionTowards(x, y));
-        //System.out.println(360 - this.korytnacky[0].directionTowards(x, y));
-
-        double otoconieDoprava = this.korytnacky[0].getDirection() + this.korytnacky[0].directionTowards(x, y);
-        double otocenieDolava = 360 - this.korytnacky[0].directionTowards(x, y);
-
-        if (otoconieDoprava < otocenieDolava) {
-            this.korytnacky[0].turn(otoconieDoprava);
-            najkratsiCas += otoconieDoprava;
-        } else {
-            this.korytnacky[0].turn(-otocenieDolava);
-            najkratsiCas += otocenieDolava;
         }
 
-        najkratsiCas += this.korytnacky[0].distanceTo(x, y);
-
-        return najkratsiCas;
+        return pole;
     }
 
-    public int najblizsiaKorytnacka(double x, double y) {
-        double najmensiaVzdialenost = Double.MAX_VALUE;
-        int indexNajblizsej = -1;
+    public void testHistogram(double x, double y, double d) {
+        int[] p = this.histogram(x, y, d);
+        System.out.print("histogram(" + x + ", " + y + ", " + d + "): ");
+        System.out.println(Arrays.toString(p));
+    }
 
+    public void doStvorca(double dlzkaStrany) {
+        //vypocitat medzeru medzi korytnackami a plus pomocna korytnacka
+        double medzera = dlzkaStrany / (this.korytnacky.length / 4.0 + 1);
+        Turtle pomoc = new Turtle();
+        pomoc.setVisible(true);
+        this.add(pomoc);
+        //na zaciatok
+        pomoc.penUp();
+        pomoc.step(dlzkaStrany / 2.0);
+        pomoc.turn(90);
+        pomoc.step(- (dlzkaStrany / 2.0));
+        pomoc.step(medzera);
+        //rozmiestnit korytnacky
         for (int i = 0; i < this.korytnacky.length; i++) {
-            double vzdialenost = this.korytnacky[i].distanceTo(x, y);
-            if (vzdialenost < najmensiaVzdialenost) {
-                najmensiaVzdialenost = vzdialenost;
-                indexNajblizsej = i;
+            korytnacky[i].setPosition(pomoc.getX(), pomoc.getY());
+            pomoc.step(medzera);
+            if (i % (this.korytnacky.length / 4) == (this.korytnacky.length / 4) - 1) {
+                pomoc.turn(90);
+                pomoc.step(medzera);
             }
         }
-        return indexNajblizsej;
-    }
-
-    public void prestrelka(int idxPrvehoStrelca, Color farbaStriel) {
-
-        Turtle zasiahnuti[] = new Turtle[this.korytnacky.length];
-
-        this.korytnacky[idxPrvehoStrelca].turnTowards(this.korytnacky[najblizsiaKorytnacka(this.ko)]);
-
+        this.remove(pomoc);
     }
 
 }
