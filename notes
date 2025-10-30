@@ -1,25 +1,4 @@
-public void prestrelka(int idxPrvehoStrelca, Color farbaStriel) {
 
-        boolean zasiahnuti[] = new boolean[this.korytnacky.length];
-        boolean hraBezi = true;
-
-
-        Turtle strelec = this.korytnacky[idxPrvehoStrelca];
-        int indexCiela = najblizsiaKorytnacka(strelec.getX(), strelec.getY(), idxPrvehoStrelca, zasiahnuti);
-        Turtle ciel = this.korytnacky[indexCiela];
-        zasiahnuti[najblizsiaKorytnacka(strelec.getX(), strelec.getY(), idxPrvehoStrelca, zasiahnuti)] = true;
-        System.out.println("Strelec: " + idxPrvehoStrelca + ", ciel: " + najblizsiaKorytnacka(strelec.getX(), strelec.getY(), idxPrvehoStrelca, zasiahnuti));
-
-        strela(strelec.getX(), strelec.getY(), ciel.getX(), ciel.getY(), farbaStriel);
-        strelec = ciel;
-        ciel = this.korytnacky[najblizsiaKorytnacka(strelec.getX(), strelec.getY(), idxPrvehoStrelca, zasiahnuti)];
-        zasiahnuti[indexCiela] = true;
-        System.out.println(Arrays.toString(zasiahnuti));
-
-
-
-
-    }
 
     public void prestrelka(int idxPrvehoStrelca, Color farbaStriel) {
 
@@ -46,3 +25,33 @@ public void prestrelka(int idxPrvehoStrelca, Color farbaStriel) {
                 currentShooterIdx = idxCiela;
             }
         }
+
+        public double casDoPrichodu(double x, double y) {
+                // ak nie je ziadna korytnacka, vratime 0
+                if (this.korytnacky == null || this.korytnacky.length == 0) {
+                    return 0.0;
+                }
+
+                double najkratsiCas = Double.POSITIVE_INFINITY;
+
+                // pre kazdu korytnacku vypocitame cas: minimalny uhol otocenia (v stupnoch) + vzdialenost (v pixeloch)
+                for (int i = 0; i < this.korytnacky.length; i++) {
+                    Turtle t = this.korytnacky[i];
+                    // aktualny smer korytnacky
+                    double aktualnySmer = t.getDirection();
+                    // smer k cielu
+                    double smerNaCiel = t.directionTowards(x, y);
+
+                    // vypocitame minimalny uhlovy rozdiel (0..180)
+                    double diff = Math.abs(smerNaCiel - aktualnySmer);
+                    if (diff > 180.0) {
+                        diff = 360.0 - diff;
+                    }
+
+                    double vzdialenost = t.distanceTo(x, y);
+                    double cas = diff + vzdialenost; // 1 stupeň = 1 sekunda, 1 pixel = 1 sekunda
+
+                    if (cas < najkratsiCas) {
+                        najkratsiCas = cas;
+                    }
+                }

@@ -59,26 +59,29 @@ public class KorytnaciSvet extends WinPane {
     }
 
     public double casDoPrichodu(double x, double y) {
-        double najkratsiCas = 0.0;
 
-        //korytnacka sa otoci uhlom mensim k smeru x,y
-        System.out.println(this.korytnacky[0].getDirection() + this.korytnacky[0].directionTowards(x, y));
-        System.out.println(360 - this.korytnacky[0].directionTowards(x, y));
+        double najkratsiCas = Double.POSITIVE_INFINITY;
 
-        double otoconieDoprava = this.korytnacky[0].getDirection() + this.korytnacky[0].directionTowards(x, y);
-        double otocenieDolava = 360 - this.korytnacky[0].directionTowards(x, y);
+        //pre kazdu korytnacku vypocitame cas: minimalny uhol pre otocenie + vzdialenost
+        for (int i = 0; i < this.korytnacky.length; i++) {
+            Turtle t = this.korytnacky[i];
+            double aktualnySmer = t.getDirection();
+            double smerNaCiel = t.directionTowards(x,y);
 
-        if (otoconieDoprava < otocenieDolava) {
-            this.korytnacky[0].turn(otoconieDoprava);
-            najkratsiCas += otoconieDoprava;
-        } else {
-            this.korytnacky[0].turn(-otocenieDolava);
-            najkratsiCas += otocenieDolava;
+            //vypocitame uhol otocenia
+            double uholOtocenia = Math.abs(smerNaCiel - aktualnySmer);
+            if (uholOtocenia > 180.0) {
+                uholOtocenia = 360.0 - uholOtocenia;
+            }
+
+            double vzdialenost = t.distanceTo(x, y);
+            double cas = uholOtocenia + vzdialenost;
+
+            if (cas < najkratsiCas) {
+                najkratsiCas = cas;
+            }
         }
 
-
-        najkratsiCas += this.korytnacky[0].distanceTo(x, y);
-        System.out.println(this.korytnacky[0].distanceTo(x, y));
 
         return najkratsiCas;
     }
