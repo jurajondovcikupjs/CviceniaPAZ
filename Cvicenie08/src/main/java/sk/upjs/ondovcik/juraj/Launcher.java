@@ -13,8 +13,8 @@ public class Launcher {
         HomeTurtle homeTurtle = new HomeTurtle();
         //System.out.println(smartTurtle.stringToInt("12a3", 0));
 
-        int[] cisla = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-        homeTurtle.spirala(new File("dots.txt"), cisla, 4);
+        int[] cisla = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+        homeTurtle.spirala(new File("dots.txt"), cisla, 5);
 
 	}
 }
