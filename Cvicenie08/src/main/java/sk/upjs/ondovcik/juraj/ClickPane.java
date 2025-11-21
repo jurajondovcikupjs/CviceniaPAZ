@@ -1,6 +1,7 @@
 package sk.upjs.ondovcik.juraj;
 
-import sk.upjs.jpaz2.*;
+import sk.upjs.jpaz2.Turtle;
+import sk.upjs.jpaz2.WinPane;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -34,14 +35,10 @@ public class ClickPane extends WinPane {
         if (detail.getButton() == MouseEvent.BUTTON1) {
             double r = Math.random() * 9 + 2;
             // nakreslit bodku
-            this.franklin.setPosition(x, y);
-            this.franklin.dot(r);
+            drawDot(x, y, r);
 
             // vlozit bodku do pola
-            this.dots[this.dotsCount][0] = x;
-            this.dots[this.dotsCount][1] = y;
-            this.dots[this.dotsCount][2] = r;
-            this.dotsCount++;
+            addToArray(x, y, r);
         }
         // prave tlacidlo
         if (detail.getButton() == MouseEvent.BUTTON3) {
@@ -80,10 +77,14 @@ public class ClickPane extends WinPane {
                 double r = sc.nextDouble();
                 System.out.println(x + " " + y + " " + r);
 
-                drawDot(x, y, r);
+                // 1. pridat do pola
                 addToArray(x, y, r);
 
+                // 2. nakreslit
+                drawDot(x, y, r);
             }
+
+
 
         } catch (FileNotFoundException e) {
             System.out.println("problem");
@@ -92,15 +93,19 @@ public class ClickPane extends WinPane {
     }
 
     public void drawDot(double x, double y, double r) {
-        this.franklin.setPosition(x, y);
-        this.franklin.dot(r);
+        franklin.setPosition(x, y);
+        franklin.dot(r);
     }
 
-    public void addToArray(double x, double y, double r) {
+    public void addToArray(double x, double y, double r){
         this.dots[this.dotsCount][0] = x;
         this.dots[this.dotsCount][1] = y;
         this.dots[this.dotsCount][2] = r;
         this.dotsCount++;
     }
 
+    public static void main(String[] args) {
+        new ClickPane();
+
+    }
 }

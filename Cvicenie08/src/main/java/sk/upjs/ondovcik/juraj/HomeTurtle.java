@@ -5,32 +5,148 @@ import sk.upjs.jpaz2.Turtle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class HomeTurtle extends Turtle {
 
+    public int pocetNulVSucine(String nazovSuboruSCislami) {
+        //pocet delitelov 2 a 5 v sucine vsetkych cisel
+        Scanner sc = null;
+        int count2 = 0;
+        int count5 = 0;
+
+        try {
+            sc = new Scanner(new File(nazovSuboruSCislami));
+
+            while (sc.hasNextLong()) {
+                //nacitanie cisla
+                long num = sc.nextLong();
+                long n = num;
+                //pocitanie delitelov 2
+                while (n % 2 == 0) {
+                    count2++;
+                    n /= 2;
+                }
+                //pocitanie delitelov 5
+                n = num;
+                while (n % 5 == 0) {
+                    count5++;
+                    n /= 5;
+                }
+            }
+            //vratime minimalny pocet delitelov 2 a 5
+            return Math.min(count2, count5);
+
+
+        } catch (FileNotFoundException e) {
+            //nenajdeny subor
+            System.out.println("Subor sa nenasiel");
+            return -1;
+        } finally {
+            //co je otvorene, treba zavriet ¯\_(ツ)_/¯
+            if (sc != null) {
+                sc.close();
+            }
+        }
+    }
+
+    public int najproduktivnejsiHrac(String nazovSuboru) {
+        // 0 - goly, 1 - asistencie, 2 - tresty (indexy btw)
+        int[][] hraci = new int[3][100]; // predpokladame max 100 hracov
+        boolean[] aktivniHraci = new boolean[100]; //ktori hraci hrali
+        int gol = 0;
+        int asistencia = 1;
+        int trest = 2;
+        Scanner sc = null;
+
+        try {
+            sc = new Scanner(new File(nazovSuboru));
+            boolean asponJeden = false;
+
+            while (sc.hasNext()) {
+                String text = sc.next();
+                int cisloHraca = sc.nextInt();
+                aktivniHraci[cisloHraca] = true;
+                asponJeden = true;
+                //precitame retazec, ak sa zhoduje, pridame body/odoberieme tresty
+                if (Objects.equals(text, "GOL")) {
+                    hraci[gol][cisloHraca] += 3;
+                } else if (Objects.equals(text, "ASISTENCIA")) {
+                    hraci[asistencia][cisloHraca] += 2;
+                } else if (Objects.equals(text, "TREST")) {
+                    hraci[trest][cisloHraca] -= 2;
+                } else {
+                    //nejaka podmineka ak by tam bolo nieco ine, co sa moze stat
+                    System.out.println("Neznamy zaznam: " + text);
+                }
+            }
+
+            if (!asponJeden) return -1;
+
+            //vypocitame najproduktivnejsieho hraca s najmensim poctom trestov a najnizsim cislom
+            int najproduktivnejsiHrac = -1;
+            int maxBody = Integer.MIN_VALUE;
+            int minTresty = Integer.MAX_VALUE;
+            for (int i = 1; i < hraci[0].length; i++) {
+                if (!aktivniHraci[i]) continue; //preskocime neaktivnych hracov
+                int body = hraci[gol][i] + hraci[asistencia][i] + hraci[trest][i];
+                int tresty = hraci[trest][i];
+                //hladame maximum
+                if (body > maxBody || (body == maxBody && tresty < minTresty) || (body == maxBody && tresty == minTresty && i < najproduktivnejsiHrac)) {
+                    maxBody = body;
+                    minTresty = tresty;
+                    najproduktivnejsiHrac = i;
+                }
+            }
+
+            return najproduktivnejsiHrac;
+        } catch (FileNotFoundException e) {
+            System.out.println("Subor sa nenasiel");
+            return -1;
+        } finally {
+            if (sc != null) {
+                sc.close();
+            }
+        }
+    }
+
+
     public void spirala(File subor, int[] cisla, int pocetRiadkov) {
+        //vytvorime maticu a naplnime ju cislami v spirale
         int cols = cisla.length / pocetRiadkov;
         int[][] mat = new int[pocetRiadkov][cols];
+        // idx je index do pola cisla, top, bottom, left, right su hranice
         int idx = 0;
-        int top = 0, bottom = pocetRiadkov - 1, left = 0, right = cols - 1;
+        int top = 0;
+        int bottom = pocetRiadkov - 1;
+        int left = 0;
+        int right = cols - 1;
 
+        // naplnanie matice v spirale
         while (top <= bottom && left <= right && idx < cisla.length) {
+            // naplnime horny riadok
             for (int i = left; i <= right && idx < cisla.length; i++)
                 mat[top][i] = cisla[idx++];
             top++;
+            // naplnime pravy stlpec
             for (int i = top; i <= bottom && idx < cisla.length; i++)
                 mat[i][right] = cisla[idx++];
             right--;
+            // naplnime dolny riadok
             for (int i = right; i >= left && idx < cisla.length; i--)
                 mat[bottom][i] = cisla[idx++];
             bottom--;
+            // naplnime lavy stlpec
             for (int i = bottom; i >= top && idx < cisla.length; i--)
                 mat[i][left] = cisla[idx++];
             left++;
         }
 
+        // zapis matice do suboru
         try (PrintWriter pw = new PrintWriter(subor)) {
             for (int i = 0; i < pocetRiadkov; i++) {
+                // zapis riadku
                 for (int j = 0; j < cols; j++) {
                     pw.print(mat[i][j]);
                     if (j < cols - 1) pw.print(" ");
@@ -41,7 +157,6 @@ public class HomeTurtle extends Turtle {
             System.out.println("Subor sa nenasiel");
         }
     }
-
-
-
 }
+
+

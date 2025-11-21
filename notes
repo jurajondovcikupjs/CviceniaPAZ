@@ -1,57 +1,170 @@
+package sk.upjs.ondovcik.juraj;
+
+import sk.upjs.jpaz2.Turtle;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Objects;
+import java.util.Scanner;
+
+public class HomeTurtle extends Turtle {
+
+    public int pocetNulVSucine(String nazovSuboruSCislami) {
+        //pocet delitelov 2 a 5 v sucine vsetkych cisel
+        Scanner sc = null;
+        int count2 = 0;
+        int count5 = 0;
+
+        try {
+            sc = new Scanner(new File(nazovSuboruSCislami));
+
+            while (sc.hasNextLong()) {
+                //nacitanie cisla
+                long num = sc.nextLong();
+                long n = num;
+                //pocitanie delitelov 2
+                while (n % 2 == 0) {
+                    count2++;
+                    n /= 2;
+                }
+                //pocitanie delitelov 5
+                n = num;
+                while (n % 5 == 0) {
+                    count5++;
+                    n /= 5;
+                }
+            }
+            //vratime minimalny pocet delitelov 2 a 5
+            return Math.min(count2, count5);
 
 
-    public void prestrelka(int idxPrvehoStrelca, Color farbaStriel) {
-
-            boolean[] zasiahnuti = new boolean[this.korytnacky.length];
-            int currentShooterIdx = idxPrvehoStrelca;
-
-            while (true) {
-                Turtle strelec = this.korytnacky[currentShooterIdx];
-
-                // find nearest unhit turtle (not self)
-                int idxCiela = najblizsiaKorytnacka(strelec.getX(), strelec.getY(), currentShooterIdx, zasiahnuti);
-                if (idxCiela == -1) break; // no more targets
-
-                Turtle ciel = this.korytnacky[idxCiela];
-
-                // shoot
-                strela(strelec.getX(), strelec.getY(), ciel.getX(), ciel.getY(), farbaStriel);
-
-                // mark as hit
-                zasiahnuti[idxCiela] = true;
-                ciel.setPenColor(farbaStriel);
-
-                // the hit turtle becomes the new shooter
-                currentShooterIdx = idxCiela;
+        } catch (FileNotFoundException e) {
+            //nenajdeny subor
+            System.out.println("Subor sa nenasiel");
+            return -1;
+        } finally {
+            //co je otvorene, treba zavriet ¯\_(ツ)_/¯
+            if (sc != null) {
+                sc.close();
             }
         }
+    }
 
-        public double casDoPrichodu(double x, double y) {
-                // ak nie je ziadna korytnacka, vratime 0
-                if (this.korytnacky == null || this.korytnacky.length == 0) {
-                    return 0.0;
+    public int najproduktivnejsiHrac(String nazovSuboru) {
+        // 0 - goly, 1 - asistencie, 2 - tresty (indexy btw)
+        int[][] hraci = new int[3][100]; // predpokladame max 100 hracov
+        int gol = 0;
+        int asistencia = 1;
+        int trest = 2;
+        Scanner sc = null;
+
+        try {
+            sc = new Scanner(new File(nazovSuboru));
+            boolean asponJeden = false;
+
+            while (sc.hasNext()) {
+                String text = sc.next();
+                //precitame retazec, ak sa zhoduje, pridame body/odoberieme tresty
+                if (Objects.equals(text, "GOL")) {
+                    int cisloHraca = sc.nextInt();
+                    hraci[gol][cisloHraca] += 3;
+                    asponJeden = true;
+                } else if (Objects.equals(text, "ASISTENCIA")) {
+                    int cisloHraca = sc.nextInt();
+                    asponJeden = true;
+                    hraci[asistencia][cisloHraca] += 2;
+                } else if (Objects.equals(text, "TREST")) {
+                    int cisloHraca = sc.nextInt();
+                    hraci[trest][cisloHraca] -= 2;
+                    asponJeden = true;
+                } else {
+                    //nejaka podmineka ak by tam bolo nieco ine, co sa moze stat
+                    System.out.println("Neznamy zaznam: " + text);
                 }
+            }
 
-                double najkratsiCas = Double.POSITIVE_INFINITY;
+            if (!asponJeden) return -1;
 
-                // pre kazdu korytnacku vypocitame cas: minimalny uhol otocenia (v stupnoch) + vzdialenost (v pixeloch)
-                for (int i = 0; i < this.korytnacky.length; i++) {
-                    Turtle t = this.korytnacky[i];
-                    // aktualny smer korytnacky
-                    double aktualnySmer = t.getDirection();
-                    // smer k cielu
-                    double smerNaCiel = t.directionTowards(x, y);
-
-                    // vypocitame minimalny uhlovy rozdiel (0..180)
-                    double diff = Math.abs(smerNaCiel - aktualnySmer);
-                    if (diff > 180.0) {
-                        diff = 360.0 - diff;
-                    }
-
-                    double vzdialenost = t.distanceTo(x, y);
-                    double cas = diff + vzdialenost; // 1 stupeň = 1 sekunda, 1 pixel = 1 sekunda
-
-                    if (cas < najkratsiCas) {
-                        najkratsiCas = cas;
+            //vypocitame najproduktivnejsieho hraca s najmensim poctom trestov a najnizsim cislom
+            int najproduktivnejsiHrac = -1;
+            int maxBody = Integer.MIN_VALUE;
+            for (int i = 1; i < hraci[0].length; i++) {
+                int body = hraci[gol][i] + hraci[asistencia][i] + hraci[trest][i];
+                //hladame maximum
+                if (body > maxBody) {
+                    maxBody = body;
+                    najproduktivnejsiHrac = i;
+                } else if (body == maxBody && najproduktivnejsiHrac != -1) {
+                    //rovnake body, rozhoduje pocet trestov
+                    if (hraci[trest][i] < hraci[trest][najproduktivnejsiHrac]) {
+                        najproduktivnejsiHrac = i;
+                    } else if (hraci[trest][i] == hraci[trest][najproduktivnejsiHrac]) {
+                        //rovnake tresty, rozhoduje cislo hraca
+                        if (i < najproduktivnejsiHrac) {
+                            najproduktivnejsiHrac = i;
+                        }
                     }
                 }
+            }
+
+            return najproduktivnejsiHrac;
+        } catch (FileNotFoundException e) {
+            System.out.println("Subor sa nenasiel");
+            return -1;
+        } finally {
+            if (sc != null) {
+                sc.close();
+            }
+        }
+    }
+
+
+    public void spirala(File subor, int[] cisla, int pocetRiadkov) {
+        //vytvorime maticu a naplnime ju cislami v spirale
+        int cols = cisla.length / pocetRiadkov;
+        int[][] mat = new int[pocetRiadkov][cols];
+        // idx je index do pola cisla, top, bottom, left, right su hranice
+        int idx = 0;
+        int top = 0;
+        int bottom = pocetRiadkov - 1;
+        int left = 0;
+        int right = cols - 1;
+
+        // naplnanie matice v spirale
+        while (top <= bottom && left <= right && idx < cisla.length) {
+            // naplnime horny riadok
+            for (int i = left; i <= right && idx < cisla.length; i++)
+                mat[top][i] = cisla[idx++];
+            top++;
+            // naplnime pravy stlpec
+            for (int i = top; i <= bottom && idx < cisla.length; i++)
+                mat[i][right] = cisla[idx++];
+            right--;
+            // naplnime dolny riadok
+            for (int i = right; i >= left && idx < cisla.length; i--)
+                mat[bottom][i] = cisla[idx++];
+            bottom--;
+            // naplnime lavy stlpec
+            for (int i = bottom; i >= top && idx < cisla.length; i--)
+                mat[i][left] = cisla[idx++];
+            left++;
+        }
+
+        // zapis matice do suboru
+        try (PrintWriter pw = new PrintWriter(subor)) {
+            for (int i = 0; i < pocetRiadkov; i++) {
+                // zapis riadku
+                for (int j = 0; j < cols; j++) {
+                    pw.print(mat[i][j]);
+                    if (j < cols - 1) pw.print(" ");
+                }
+                pw.println();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Subor sa nenasiel");
+        }
+    }
+}
+
+
