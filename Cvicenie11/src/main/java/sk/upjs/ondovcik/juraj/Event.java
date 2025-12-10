@@ -19,9 +19,13 @@ public class Event {
     }
 
     public int numberOfTeenageBoys() {
+        if (kids.isEmpty()) {
+            return 0;
+        }
+
         int count = 0;
         for (Kid kid : kids) {
-            if (!kid.isGirl() && kid.getAge() >= 12) {
+            if (!kid.isGirl() && kid.getAge() > 12) {
                 count++;
             }
         }
@@ -31,9 +35,13 @@ public class Event {
     public Map<String, Integer> numberOfKids() {
         Map<String, Integer> map = new HashMap<>();
 
+        if (kids.isEmpty()) {
+            return map;
+        }
+
         for (Kid kid : kids) {
             String parent = kid.getParent();
-            map.put(parent, map.get(parent) + 1);
+            map.put(parent, map.getOrDefault(parent, 0) + 1);
         }
 
         return map;
