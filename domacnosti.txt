@@ -1,0 +1,5 @@
+Meno1\tAdresa1\t1\t6.3
+Meno2\tAdresa2\t2\t6.3
+Meno3\tAdresa3\t3\t6.3
+Meno4\tAdresa4\t4\t6.3
+Meno5\tAdresa5\t5\t6.3
