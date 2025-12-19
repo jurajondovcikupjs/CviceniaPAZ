@@ -5,7 +5,7 @@
         <groupId>sk.upjs.ondovcik.juraj</groupId>
         <artifactId>CviceniaPAZ</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>Cvicenie11</artifactId>
