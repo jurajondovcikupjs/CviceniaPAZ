@@ -1,0 +1,3 @@
+Name 1;09/1519;Leaving;Sail;false;1.1.2000;45
+Name 2;05/1412;Leaving;Sail;true;45
+Name 1;19/1519;Leaving;Sail;false;45
