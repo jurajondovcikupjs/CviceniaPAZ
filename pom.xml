@@ -21,8 +21,9 @@
         <module>Cvicenie08</module>
         <module>Cvicenie09</module>
         <module>MidTerm</module>
-        <module>Cvicenie01/Cvicenie11</module>
         <module>FinalTerm</module>
+        <module>C03</module>
+        <module>C04</module>
     </modules>
 
     <properties>
