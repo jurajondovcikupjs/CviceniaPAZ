@@ -24,6 +24,7 @@
         <module>FinalTerm</module>
         <module>C03</module>
         <module>C04</module>
+        <module>C07</module>
     </modules>
 
     <properties>
